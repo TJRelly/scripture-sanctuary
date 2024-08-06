@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{user.username}}
+{% endblock %}
+
+{% block content %}
+
+<div class="user-profile-header">
+    <img src="{{user.img_url}}" alt="">
+    <div class="text">
+        <h2 class="pt-4 display-1 text-white lead">Welcome {{user.first_name}}!</h2>
+    </div>
+</div>
+
+<div class="container"> 
+    <section>
+        <h1 class="pt-4 lead display-4">{{user.first_name}} {{user.last_name}}</h1>
+        <div class="d-flex">
+            <a href="/users/{{user.id}}/edit" class="btn btn-primary mr-2">Edit</a>
+            <form action="/users/{{user.id}}/delete" method="POST">
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form> 
+        </div> 
+    </section>
+
+    <section class="user-details">
+        <h2 class="favorites pt-4 lead">Favorites</h2>
+        <ul>
+            {% if favorites %}
+                {% for favorite in favorites %}
+                <li><a href="/favorites/{{favorite.id}}">{{favorite.title}}</a></li>
+                {% endfor %}
+            {% else %}
+                <li class="p-2">No favorites yet.</li>
+            {% endif %}
+        </ul>
+        <div class="d-flex flex-column">
+            <a href="/users/{{user.id}}/favorites/new" class="btn btn-primary align-self-start">Add Favorite</a>
+            <!-- Only available for admin -->
+            <a href="{{ url_for('get_users') }}" class="py-4">Back to users</a> 
+        </div>
+    </section>
+</div>
+
+{% endblock %}

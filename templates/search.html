@@ -6,7 +6,7 @@
 
 <div class="container">
     <!-- Search for bible verse(s) form -->
-    <form method="POST" action="{{ url_for('search_page') }}">
+    <form method="POST" action="{{ url_for('search') }}">
         <h1 class="display-4 form-title pt-4 pb-2">Scripture Search</h1>
         
         {{ form.hidden_tag() }} <!-- Include CSRF token and other hidden fields -->

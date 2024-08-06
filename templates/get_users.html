@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Users
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+    <h1 class="pt-4 display-4">Users</h1>
+
+    <ul class="pt-3"> 
+        {% for user in users %}
+        <li class="user-list d-flex pb-3">
+            <a href="/users/{{user.id}}" class="user-list d-flex">
+                <img class="pr-3" src={{user.img_url}} alt="">
+                <p class="h-100 d-flex align-items-center"> {{user.first_name}} {{user.last_name}} @{{user.username}}</p>
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+
+    <a href="/users/new" class="btn btn-info mb-4">Add a new user</a>
+
+</div>
+{% endblock %}
