@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}Scripture Sanctuary{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <!-- Search for bible verse(s) form -->
+    <form method="POST" action="{{ url_for('search_page') }}">
+        <h1 class="display-4 form-title pt-4 pb-2">Scripture Search</h1>
+        
+        {{ form.hidden_tag() }} <!-- Include CSRF token and other hidden fields -->
+    
+        <div class="container">
+            <div class="row">
+                {% for field in form %}
+                    {% if field.widget.input_type != 'hidden' %}
+                        <div class="col-md-2 mb-2 px-1"> <!-- Adjust column size and margin-bottom as needed -->
+                            <div class="form-group">
+                                {% if field.name != 'search' %}
+                                    {{ field.label(class_="form-label") }}
+                                {% endif %}
+                                {% if field.name == 'start_verse' or field.name == 'end_verse' %}
+                                    {{ field(class_="form-control", placeholder="Optional") }}
+                                {% elif field.name == 'search' %}
+                                    <label class="form-label d-block">&nbsp;</label> <!-- Placeholder to maintain spacing -->
+                                    {{ field(class_="form-control btn btn-primary text-white") }}
+                                {% else %}
+                                    {{ field(class_="form-control") }}
+                                {% endif %}
+                                
+                                {% if field.errors %}
+                                    <div class="invalid-feedback">
+                                        {% for error in field.errors %}
+                                            <p>{{ error }}</p>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </form>
+    <!-- Display the scripture -->
+    {% if scripture_text %}
+        <h2 class="lead display-4 pt-2">
+            {{formated_scripture}} 
+        </h2>
+        <ul class="list-unstyled pb-4">
+            {% for verse in scripture_text %}
+                <li class="p-1 fs-5">
+                    <span class="lead px-1 fs-5">{{ verse['verse']}}</span>
+                    {{ verse['text'] | safe }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    
+</div>
+
+{% endblock %}

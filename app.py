@@ -1,10 +1,13 @@
 #pip imports
-from flask import Flask, redirect, render_template, flash, url_for
+import re
+from flask import Flask, jsonify, redirect, render_template, flash, url_for, request, session
 from flask_debugtoolbar import DebugToolbarExtension
 #created imports
-from api_requests import get_books, get_translations
+from api_requests import get_books, get_translations, get_scripture
 from forms import SearchForm
+from models import db, connect_db, User, Favorite, Tag, FavoriteTag
 
+BOOKS = get_books()
 
 app = Flask(__name__)
 # for flask debugtoolbar
@@ -12,34 +15,95 @@ app.config['SECRET_KEY'] = "oh-so-secret"
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 debug = DebugToolbarExtension(app)
 
-#list of bible translations
-TRANSLATIONS = get_translations()
-#list of bible books
-BOOKS = get_books()
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///scripture-sanctuary'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_ECHO'] = True
 
-@app.route('/', methods=['GET', 'POST'])
+connect_db(app)
+
+@app.route('/', methods=['GET'])
 def home_page():
     """
-    Renders Home Page
+    Redirects to search page
+    """
+    return redirect('/search')
+    
+@app.route('/search', methods=['GET', 'POST'])
+def search_page():
+    """
     Allows anyone to search a scripture
+    Displays Scripture
     Displays an inspiring scripture
     """
     
     form = SearchForm()
-    form.translation.choices = [(f"{t['short_name']} - {t['full_name']}") for t in TRANSLATIONS]
-    form.book.choices = [(f"{b['name']}") for b in BOOKS]
     
-    if form.validate_on_submit():
-        book = form.book.data
-        chapter = form.chapter.data
-        translation = form.translation.data
-        start_verse = form.start_verse.data 
-        end_verse = form.end_verse.data
-        
-        scripture = get_scripture()
-        
-        flash(f"{book} {chapter} : {start_verse} {end_verse} {translation}")
-        return render_template("home.html", form=form, scripture=scripture)
+    if request.method == 'POST' :
+    
+        if form.validate_on_submit():
+            book = int(form.book.data)
+            chapter = form.chapter.data
+            translation = form.translation.data
+            start_verse = form.start_verse.data 
+            end_verse = form.end_verse.data
+            
+            criteria = [translation, book, chapter, start_verse, end_verse]
+            
+            # uses form data to make api request
+            scripture_text = get_scripture(criteria)
+            
+            if not scripture_text:
+                flash(f"Sorry, scripture not found.", "danger")
+                return redirect('/')
+            
+            formatted_verses = []
+            for verse in scripture_text:
+                formatted_text = remove_strongs_tags(verse['text'])
+                formatted_verses.append({'verse': verse['verse'], 'text': formatted_text})
+            
+            scripture = {
+                "book": BOOKS[book-1]['name'],
+                "chapter": chapter,
+                "start": start_verse,
+                "end": end_verse,
+                "trans": translation
+            }
+           
+            formated_scripture = format_scripture(scripture)
+            
+            return render_template("search.html", form=form, scripture_text=formatted_verses, formated_scripture=formated_scripture)
+        else:
+            # Form is not valid
+            print(f"Form errors: {form.errors}")
+            flash("Error on form")
+            return redirect("/search")
 
     else:
-        return render_template("home.html", form=form)
+        return render_template("search.html", form=form)
+
+# helper functions
+def format_scripture(scripture):
+    """
+    input: scripture obj
+    output: formated string
+    """
+    start_verse = scripture['start']
+    end_verse = scripture['end']
+    
+    formated_scripture = f"{scripture['book']} {scripture['chapter']}"
+           
+    if start_verse and end_verse:
+        formated_scripture += f":{scripture['start']}-{scripture['end']} ({scripture['trans']})"
+    elif start_verse:
+        formated_scripture += f":{scripture['start']} ({scripture['trans']})"
+    elif end_verse:
+        formated_scripture += f":1-{scripture['end']} ({scripture['trans']})"
+        
+    return formated_scripture
+
+def remove_strongs_tags(text):
+    """
+    Remove <S> tags and their content from the given text.
+    """
+    return re.sub(r'<S>\d+</S>', '', text)
+ 
