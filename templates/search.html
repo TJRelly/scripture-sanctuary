@@ -11,15 +11,15 @@
     </div>
 </div>
 
-<div class="search container">
+<div class="search px-2">
     <!-- Search for bible verse(s) form -->
     <form method="POST" action="{{ url_for('search') }}">
-        <h1 class="scripture-search display-4 form-title pt-4 pb-2">Scripture Search</h1>
-        
         {{ form.hidden_tag() }} <!-- Include CSRF token and other hidden fields -->
-    
+        
         <div class="container">
+            
             <div class="row">
+                <h1 class="scripture-search display-5 pt-4 px-0">Scripture Search</h1>
                 {% for field in form %}
                     {% if field.widget.input_type != 'hidden' %}
                         <div class="col-md-2 mb-2 px-1"> <!-- Adjust column size and margin-bottom as needed -->
@@ -51,20 +51,21 @@
         </div>
     </form>
     <!-- Display the scripture -->
-    {% if scripture_text %}
-        <h2 class="lead display-4 pt-2">
-            {{formated_scripture}} 
-        </h2>
-        <ul class="list-unstyled pb-4">
-            {% for verse in scripture_text %}
-                <li class="p-1 fs-5">
-                    <span class="lead px-1 fs-5">{{ verse['verse']}}</span>
-                    {{ verse['text'] | safe }}
-                </li>
-            {% endfor %}
-        </ul>
-    {% endif %}
-    
+     <div class="container bg-white">
+        {% if scripture_text %}
+            <h2 class="lead display-4 pt-2">
+                {{formated_scripture}} 
+            </h2>
+            <ul class="list-unstyled pb-4">
+                {% for verse in scripture_text %}
+                    <li class="p-1 fs-5">
+                        <span class="lead px-1 fs-5">{{ verse['verse']}}</span>
+                        {{ verse['text'] | safe }}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div> 
 </div>
 
 {% endblock %}

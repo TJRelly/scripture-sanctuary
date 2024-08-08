@@ -47,7 +47,7 @@ def get_users():
     Gets Users
     """
     users = db.session.query(User).all()
-    return render_template("get_users.html", users=users)
+    return render_template("users.html", users=users)
 
 
 @app.route("/users/<user_id>", methods=["GET"])

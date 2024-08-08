@@ -12,6 +12,11 @@ ul {
     list-style: none;
     padding: 0;
 }
+/* Navbar CSS */
+
+.navbar-transparent {
+    background-color: rgba(255, 255, 255); /* Adjust the transparency */
+}
 
 /* Users CSS */
 
@@ -90,7 +95,6 @@ ul {
 .search {
     background-color: whitesmoke;
 }
-
 
 /* Media query for smaller screens */
 @media (max-width: 600px) {
