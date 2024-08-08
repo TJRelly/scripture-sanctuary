@@ -56,8 +56,24 @@ def user_profile(user_id):
     Gets User by id
     """
     user = User.query.get_or_404(user_id)
-    print(f"******************{user}******************")
-    return render_template("user_profile.html", user=user)
+    favorites = user.favorites
+    scriptures = []
+
+    for scripture in favorites:
+        id = scripture.id
+        scripture = {
+            "book": BOOKS[scripture.book - 1]["name"],
+            "chapter": scripture.chapter,
+            "start": scripture.start,
+            "end": scripture.end,
+            "trans": scripture.translation,
+        }
+
+        print(scripture)
+        formatted_scripture = {"title": format_scripture(scripture), "id": id}
+        scriptures.append(formatted_scripture)
+
+    return render_template("user_profile.html", user=user, scriptures=scriptures)
 
 
 @app.route("/search", methods=["GET", "POST"])
@@ -96,8 +112,6 @@ def search():
                 )
 
             scripture = {
-                
-                
                 "book": BOOKS[book - 1]["name"],
                 "chapter": chapter,
                 "start": start_verse,
@@ -105,13 +119,13 @@ def search():
                 "trans": translation,
             }
 
-            formated_scripture = format_scripture(scripture)
+            formatted_scripture = format_scripture(scripture)
 
             return render_template(
                 "search.html",
                 form=form,
                 scripture_text=formatted_verses,
-                formated_scripture=formated_scripture,
+                formatted_scripture=formatted_scripture,
             )
         else:
             # Form is not valid
@@ -127,23 +141,25 @@ def search():
 def format_scripture(scripture):
     """
     input: scripture obj
-    output: formated string
+    output: formatted string
     """
     start_verse = scripture["start"]
     end_verse = scripture["end"]
 
-    formated_scripture = f"{scripture['book']} {scripture['chapter']}"
+    formatted_scripture = f"{scripture['book']} {scripture['chapter']}"
 
     if start_verse and end_verse:
-        formated_scripture += (
+        formatted_scripture += (
             f":{scripture['start']}-{scripture['end']} ({scripture['trans']})"
         )
     elif start_verse:
-        formated_scripture += f":{scripture['start']} ({scripture['trans']})"
+        formatted_scripture += f":{scripture['start']} ({scripture['trans']})"
     elif end_verse:
-        formated_scripture += f":1-{scripture['end']} ({scripture['trans']})"
+        formatted_scripture += f":1-{scripture['end']} ({scripture['trans']})"
+    else:
+        formatted_scripture += f" ({scripture['trans']})"
 
-    return formated_scripture
+    return formatted_scripture
 
 
 def remove_strongs_tags(text):

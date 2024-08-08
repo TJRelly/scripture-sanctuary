@@ -13,6 +13,8 @@ ul {
     padding: 0;
 }
 
+/* Users CSS */
+
 .user-list img {
     width: 5rem;
 }
@@ -51,10 +53,59 @@ ul {
     font-size: 2.5rem;
 }
 
+.scripture-title {
+    font-size: 1.25rem;
+}
+
+/*Search Page CSS */
+
+.search-profile-header {
+    position: relative;
+    text-align: center;
+}
+
+.search-profile-header img {
+    width: 100%;
+    height: auto;
+    max-height: 400px;
+    display: block;
+    object-fit: cover;
+}
+
+.search-profile-header .text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.375);
+    padding-bottom: 1.5rem;
+}
+
+.search-profile-header h2 {
+    font-size: 5rem;
+}
+
+.search {
+    background-color: whitesmoke;
+}
+
+
 /* Media query for smaller screens */
 @media (max-width: 600px) {
-    .header-text h2 {
+    .user-profile-header h2 {
         font-size: 2.5rem; /* Adjust font size for mobile */
+        padding: 0 2rem;
+    }
+
+    .search-profile-header h2 {
+        font-size: 2.5rem; /* Adjust font size for mobile */
+        padding: 0 2rem;
+    }
+
+    .scripture-search {
+        font-size: 2.5rem;
     }
 }
 

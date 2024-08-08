@@ -15,8 +15,9 @@
 
 <div class="container"> 
     <section>
-        <h1 class="pt-4 lead display-4">{{user.first_name}} {{user.last_name}}</h1>
-        <div class="d-flex">
+        <h1 class="pt-4 mb-0 lead display-4">{{user.first_name}} {{user.last_name}}</h1>
+        <span class="fs-3 text-muted">@{{user.username}}</span>
+        <div class="d-flex pt-3">
             <a href="/users/{{user.id}}/edit" class="btn btn-primary mr-2">Edit</a>
             <form action="/users/{{user.id}}/delete" method="POST">
                 <button type="submit" class="btn btn-danger">Delete</button>
@@ -27,9 +28,9 @@
     <section class="user-details">
         <h2 class="favorites pt-4 lead">Favorites</h2>
         <ul>
-            {% if favorites %}
-                {% for favorite in favorites %}
-                <li><a href="/favorites/{{favorite.id}}">{{favorite.title}}</a></li>
+            {% if scriptures %}
+                {% for scripture in scriptures %}
+                <li><a class="scripture-title" href="/favorites/{{scripture.id}}">{{scripture.title}}</a></li>
                 {% endfor %}
             {% else %}
                 <li class="p-2">No favorites yet.</li>
