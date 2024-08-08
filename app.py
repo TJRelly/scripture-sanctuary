@@ -57,24 +57,18 @@ def user_profile(user_id):
     """
     user = User.query.get_or_404(user_id)
     favorites = user.favorites
-    scriptures = []
-
-    for scripture in favorites:
-        id = scripture.id
-        scripture = {
-            "book": BOOKS[scripture.book - 1]["name"],
-            "chapter": scripture.chapter,
-            "start": scripture.start,
-            "end": scripture.end,
-            "trans": scripture.translation,
-        }
-
-        print(scripture)
-        formatted_scripture = {"title": format_scripture(scripture), "id": id}
-        scriptures.append(formatted_scripture)
+    scriptures = format_favorite_query(favorites)
 
     return render_template("user_profile.html", user=user, scriptures=scriptures)
 
+@app.route("/favorites/<favorite_id>")
+def show_favorite(favorite_id):
+    """Shows posts using id"""
+    
+    favorite = Favorite.query.get_or_404(favorite_id)
+    time = favorite.created_at.strftime(f"%a %b %d %Y, %-I:%M %p")
+    
+    return render_template('favorite.html', favorite=favorite, time=time)
 
 @app.route("/search", methods=["GET", "POST"])
 def search():
@@ -167,3 +161,23 @@ def remove_strongs_tags(text):
     Remove <S> tags and their content from the given text.
     """
     return re.sub(r"<S>\d+</S>", "", text)
+
+def format_favorite_query(query):
+    """
+    Formats database query into human readable scripture
+    """
+    scriptures = []
+
+    for scripture in query:
+        id = scripture.id
+        scripture = {
+            "book": BOOKS[scripture.book - 1]["name"],
+            "chapter": scripture.chapter,
+            "start": scripture.start,
+            "end": scripture.end,
+            "trans": scripture.translation,
+        }
+
+        formatted_scripture = {"title": format_scripture(scripture), "id": id}
+        scriptures.append(formatted_scripture)
+        return scriptures

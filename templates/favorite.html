@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Post
+{% endblock %}
+formate
+{% block content %}
+
+<div class="p-2">
+    <h3 class="p-2">{{favorite.title}}</h3>
+
+    <p class="p-2 w-75">{{favorite.content}}</p>
+    
+    <div class="bottom-btns">
+        <div class="edit-delete p-2">
+            <a href="/favorites/{{favorite.id}}/edit" class="btn btn-primary">Edit</a>
+            <form action="/favorites/{{favorite.id}}/delete" method="POST">
+                <input type="submit" name="delete" id="delete" value="Delete" class="btn btn-danger">
+            </form>
+        </div>
+        <a href="/users/{{favorite.users.id}}">More from {{favorite.users.first_name}} {{favorite.users.last_name}}</a> <span class="p-2">Created on {{time}}</span>
+        <!-- Display tags for favorites -->
+        {% if favorite.tags %}
+            <ul class="favorite-tags px-2">
+                <li class="font-weight-bold">Tags: </li>
+                {% for tag in favorite.tags %}
+                <li><a href="/tags/{{tag.id}}" class="btn btn-primary btn-sm py-0 px-1 text-capitalize font-italic font-weight-bold">{{tag.name}}</a></li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+    </div>
+</div>
+
+{% endblock %}
