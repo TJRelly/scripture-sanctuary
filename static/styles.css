@@ -1,3 +1,6 @@
+/* Fonts */
+@import url("https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Grey+Qo&family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap");
+
 * {
     box-sizing: border-box;
     padding: 0;
@@ -12,10 +15,30 @@ ul {
     list-style: none;
     padding: 0;
 }
+
+.content {
+    margin-top: 4rem;
+}
+.add-user-form {
+    margin-top: 4rem;
+}
 /* Navbar CSS */
 
-.navbar-transparent {
-    background-color: rgba(255, 255, 255); /* Adjust the transparency */
+.navbar {
+    background-color: rgba(255, 255, 255);
+}
+
+.navbar img {
+    width: 2.5rem;
+}
+
+.navbar a {
+    font-size: 1rem;
+}
+
+.navbar a.logo {
+    font-family: Georgia, "Times New Roman", Times, serif;
+    font-size: 1.25rem;
 }
 
 /* Users CSS */
@@ -34,9 +57,10 @@ ul {
 .user-profile-header img {
     width: 100%;
     height: auto;
-    max-height: 400px;
+    max-height: 20rem;
     display: block;
     object-fit: cover;
+    background-color: pink;
 }
 
 .user-profile-header .text {
@@ -94,6 +118,14 @@ ul {
 
 .search {
     background-color: whitesmoke;
+}
+
+/* User Form CSS */
+.add-user-form {
+    background-color: whitesmoke;
+    padding-bottom: 4rem 2rem;
+    border-radius: 0.5rem;
+    margin-top: 0;
 }
 
 /* Media query for smaller screens */

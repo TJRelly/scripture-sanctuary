@@ -11,45 +11,48 @@
     </div>
 </div>
 
+
 <div class="search px-2">
     <!-- Search for bible verse(s) form -->
-    <form method="POST" action="{{ url_for('search') }}">
-        {{ form.hidden_tag() }} <!-- Include CSRF token and other hidden fields -->
-        
-        <div class="container">
-            
-            <div class="row">
-                <h1 class="scripture-search display-5 pt-4 px-0">Scripture Search</h1>
-                {% for field in form %}
-                    {% if field.widget.input_type != 'hidden' %}
-                        <div class="col-md-2 mb-2 px-1"> <!-- Adjust column size and margin-bottom as needed -->
-                            <div class="form-group">
-                                {% if field.name != 'search' %}
-                                    {{ field.label(class_="form-label") }}
-                                {% endif %}
-                                {% if field.name == 'start_verse' or field.name == 'end_verse' %}
-                                    {{ field(class_="form-control", placeholder="Optional") }}
-                                {% elif field.name == 'search' %}
-                                    <label class="form-label d-block">&nbsp;</label> <!-- Placeholder to maintain spacing -->
-                                    {{ field(class_="form-control btn btn-primary text-white") }}
-                                {% else %}
-                                    {{ field(class_="form-control") }}
-                                {% endif %}
-                                
-                                {% if field.errors %}
-                                    <div class="invalid-feedback">
-                                        {% for error in field.errors %}
-                                            <p>{{ error }}</p>
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
+    <div id="searchContainer" class="dropdown">
+        <form id="scriptureSearchForm" method="POST" action="{{ url_for('search') }}">
+            {{ form.hidden_tag() }} <!-- Include CSRF token and other hidden fields -->
+    
+            <div class="container">
+                <div class="row">
+                    <h1 class="scripture-search display-5 pt-4 px-0">Scripture Search</h1>
+                    {% for field in form %}
+                        {% if field.widget.input_type != 'hidden' %}
+                            <div class="col-md-2 mb-2 px-1"> <!-- Adjust column size and margin-bottom as needed -->
+                                <div class="form-group">
+                                    {% if field.name != 'search' %}
+                                        {{ field.label(class_="form-label") }}
+                                    {% endif %}
+    
+                                    {% if field.name == 'start_verse' or field.name == 'end_verse' %}
+                                        {{ field(class_="form-control", placeholder="Optional") }}
+                                    {% elif field.name == 'search' %}
+                                        <label class="form-label d-block">&nbsp;</label> <!-- Placeholder to maintain spacing -->
+                                        {{ field(class_="form-control btn btn-primary text-white") }}
+                                    {% else %}
+                                        {{ field(class_="form-control") }}
+                                    {% endif %}
+    
+                                    {% if field.errors %}
+                                        <div class="invalid-feedback">
+                                            {% for error in field.errors %}
+                                                <p>{{ error }}</p>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
                             </div>
-                        </div>
-                    {% endif %}
-                {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                </div>
             </div>
-        </div>
-    </form>
+        </form>
+    </div>
     <!-- Display the scripture -->
      <div class="container bg-white">
         {% if scripture_text %}

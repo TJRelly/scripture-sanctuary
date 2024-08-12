@@ -21,8 +21,8 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(500), unique=True, nullable=False)
     password = db.Column(db.String(500), nullable=False)
-    first_name = db.Column(db.String(500), nullable=False)
-    last_name = db.Column(db.String(500), nullable=False)
+    first_name = db.Column(db.String(500))
+    last_name = db.Column(db.String(500))
     email = db.Column(db.String(500), nullable=False)
     img_url = db.Column(db.String(500), default=DEFAULT_IMG)
 

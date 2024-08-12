@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import SelectField, SubmitField, IntegerField
+from wtforms import EmailField, PasswordField, SelectField, StringField, SubmitField, IntegerField
 from wtforms.validators import DataRequired, Optional, NumberRange
 from api_requests import get_books, get_translations
 
@@ -19,3 +19,19 @@ class SearchForm(FlaskForm):
     end_verse = IntegerField('To Verse', validators=[Optional(), NumberRange(min=1)])
     translation = SelectField('Bible Translation', choices=TRANSLATIONS_TUPLES, validators=[DataRequired()])
     search = SubmitField("Find Verse")
+    
+class AddUserForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    first_name = StringField('First Name', validators=[Optional()])
+    last_name = StringField('Last Name', validators=[Optional()])
+    email = EmailField('Email', validators=[DataRequired()])
+    img_url = StringField('Image URL', validators=[Optional()])
+    
+class EditUserForm(FlaskForm):
+    username = StringField('Username')
+    password = PasswordField('Password')
+    first_name = StringField('First Name')
+    last_name = StringField('Last Name')
+    email = EmailField('Email')
+    img_url = StringField('Image')
