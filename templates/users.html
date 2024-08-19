@@ -13,9 +13,9 @@ Users
     <ul class="pt-3"> 
         {% for user in users %}
         <li class="user-list d-flex pb-3">
-            <a href="/users/{{user.id}}" class="user-list d-flex">
-                <img class="pr-3" src={{user.img_url}} alt="">
-                <p class="h-100 d-flex align-items-center"> {{user.first_name}} {{user.last_name}} @{{user.username}}</p>
+            <a href="{{url_for('user_profile', user_id=user.id)}}" class="user-list d-flex">
+                <img class="rounded-circle" src={{user.profile_img_url}} alt="">
+                <p class="h-100 d-flex align-items-center pl-2"> {{user.first_name}} {{user.last_name}} @{{user.username}}</p>
             </a>
         </li>
         {% endfor %}

@@ -6,30 +6,48 @@ Post
 formate
 {% block content %}
 
-<div class="p-2">
-    <h3 class="p-2">{{favorite.title}}</h3>
+<div class="container">
+    <!-- Display the scripture -->
+    <section class="container bg-white">
+        {% if scripture_text %}
+            <h2 class="lead display-4 pt-2">
+                {{formatted_scripture.title}} 
+            </h2>
+            <ul class="list-unstyled">
+                {% for verse in scripture_text %}
+                    <li class="p-1 fs-5">
+                        <span class="lead px-1 fs-5">{{ verse['verse']}}</span>
+                        {{ verse['text'] | safe }}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </section> 
 
-    <p class="p-2 w-75">{{favorite.content}}</p>
+    <section class="pb-4 px-3">
+        <div class="d-flex pb-2">
+            <a href="{{url_for('user_profile', user_id=favorite.users.id)}}" class="btn btn-primary mr-2">Back</a>
+            <form action="{{url_for('user_profile', user_id=favorite.users.id)}}" method="POST">
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form> 
+        </div> 
     
-    <div class="bottom-btns">
-        <div class="edit-delete p-2">
-            <a href="/favorites/{{favorite.id}}/edit" class="btn btn-primary">Edit</a>
-            <form action="/favorites/{{favorite.id}}/delete" method="POST">
-                <input type="submit" name="delete" id="delete" value="Delete" class="btn btn-danger">
-            </form>
+        <div class="py-2">
+            <a href="{{url_for('user_profile', user_id=favorite.users.id)}}">More from {{favorite.users.first_name}} {{favorite.users.last_name}}</a> <span class="p-2">Created on {{time}}</span>
         </div>
-        <a href="/users/{{favorite.users.id}}">More from {{favorite.users.first_name}} {{favorite.users.last_name}}</a> <span class="p-2">Created on {{time}}</span>
+        
+         
         <!-- Display tags for favorites -->
         {% if favorite.tags %}
-            <ul class="favorite-tags px-2">
+            <ul class="favorite-tags">
                 <li class="font-weight-bold">Tags: </li>
                 {% for tag in favorite.tags %}
                 <li><a href="/tags/{{tag.id}}" class="btn btn-primary btn-sm py-0 px-1 text-capitalize font-italic font-weight-bold">{{tag.name}}</a></li>
                 {% endfor %}
             </ul>
-        {% endif %}
+        {% endif %} 
+    </section>
 
-    </div>
 </div>
 
 {% endblock %}
