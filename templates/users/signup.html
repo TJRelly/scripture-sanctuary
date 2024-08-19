@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Register
+{% endblock %}
+
+{% block content %}
+<main class="container pb-4">
+    <h1 class="display-1 mx-n1">
+        Register
+    </h1>
+    <p>Already have an account? <a href="/login">Log in</a></p>
+    <form id="register-form" method="POST">
+        {{ form.hidden_tag() }} <!--add type=hidden form fields -->
+      
+        {% for field in form
+               if field.widget.input_type != 'hidden' %}
+      
+        <div class="form-group">
+            {{ field.label (class_ = "pt-1")}}
+            {{ field (class_ = "form-control")}}
+      
+            {% for error in field.errors %}
+                <small class="form-text text-danger">
+                    {{ error }}
+                </small>  
+            {% endfor %}
+        </div>
+      
+        {% endfor %}
+      
+        <button type="submit" class="btn btn-primary mt-3">Register</button>
+      </form>
+</main>
+{% endblock %}

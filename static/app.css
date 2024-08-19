@@ -41,10 +41,21 @@ ul {
     font-size: 1.25rem;
 }
 
-/* Users CSS */
+.navbar-collapse.show .nav-item .btn {
+   width: 5rem;
+  }
 
+/* Users CSS */
 .user-list img {
-    width: 5rem;
+    width: 3.5rem;
+    height: 3.5rem;
+    object-fit: cover;
+}
+
+.profile-img {
+    width: 3.5rem;
+    height: 3.5rem;
+    object-fit: cover;
 }
 
 /* User Profile CSS */
@@ -78,11 +89,12 @@ ul {
     font-size: 5rem;
 }
 
-.user-details .favorites {
+.user-details .favorites,
+.user-details .tags {
     font-size: 2.5rem;
 }
 
-.scripture-title {
+.scripture-title, .tag-name {
     font-size: 1.25rem;
 }
 

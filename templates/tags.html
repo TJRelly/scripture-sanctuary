@@ -8,16 +8,14 @@ Tags
 
 <div class="container pt-4">   
     <h1>Popular Tags</h1>
-    <ul class="">
+    <ul class="py-2">
         {% for tag in tags %}
         <li><a class="fs-3" href="/tags/{{tag.id}}">{{tag.name}}</a></li>
         {% endfor %}
     </ul>
 
     <a href="/tags/new" class="btn btn-primary">Add Tag</a>
-    <a href="/" class="pt-2 pl-2">Back to users</a>
-    
-    
+      
 </div>
 
 {% endblock %}

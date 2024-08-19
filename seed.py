@@ -1,5 +1,8 @@
+from flask_bcrypt import Bcrypt
 from app import app
 from models import Favorite, Tag, User, db
+
+bcrypt = Bcrypt()
 
 with app.app_context():
     db.drop_all()
@@ -13,7 +16,7 @@ def create_mock_data():
 
     user1 = User(
         username="john_doe",
-        password="password123",
+        password=bcrypt.generate_password_hash('password1').decode('utf-8'),
         first_name="John",
         last_name="Doe",
         email="john@example.com",
@@ -21,7 +24,7 @@ def create_mock_data():
     )
     user2 = User(
         username="jane_smith",
-        password="password456",
+        password=bcrypt.generate_password_hash('password2').decode('utf-8'),
         first_name="Jane",
         last_name="Smith",
         email="jane@example.com",

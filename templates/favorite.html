@@ -28,10 +28,12 @@ formate
         <div class="d-flex pb-2">
             <a href="{{url_for('user_profile', user_id=favorite.users.id)}}" class="btn btn-primary mr-2">Back</a>
             <form action="{{url_for('user_profile', user_id=favorite.users.id)}}" method="POST">
-                <button type="submit" class="btn btn-danger">Delete</button>
-            </form> 
+                <button type="submit" class="btn btn-success">Add Tag</button>
+            </form>
         </div> 
-    
+        <form action="{{url_for('user_profile', user_id=favorite.users.id)}}" method="POST">
+            <button type="submit" class="btn btn-outline-danger mr-2">Delete</button>
+        </form>
         <div class="py-2">
             <a href="{{url_for('user_profile', user_id=favorite.users.id)}}">More from {{favorite.users.first_name}} {{favorite.users.last_name}}</a> <span class="p-2">Created on {{time}}</span>
         </div>
@@ -39,11 +41,13 @@ formate
          
         <!-- Display tags for favorites -->
         {% if favorite.tags %}
-            <ul class="favorite-tags">
-                <li class="font-weight-bold">Tags: </li>
+            <h2 class="lead fs-1">Tags: </h2>
+            <ul class="favorite-tags d-flex">
                 {% for tag in favorite.tags %}
-                <li><a href="/tags/{{tag.id}}" class="btn btn-primary btn-sm py-0 px-1 text-capitalize font-italic font-weight-bold">{{tag.name}}</a></li>
-                {% endfor %}
+                    <li>
+                        <a href="/tags/{{tag.id}}" class="btn btn-primary btn-sm py-0 px-1 text-capitalize font-italic font-weight-bold mr-2 fs-6">{{tag.name}}</a>
+                    </li>
+            {% endfor %}
             </ul>
         {% endif %} 
     </section>

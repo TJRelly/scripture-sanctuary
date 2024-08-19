@@ -6,25 +6,25 @@
 
 {% block content %}
 
-<div class="p-4">   
+<div class="p-4 container">   
     <h1 class="text-capitalize">{{tag.name}} Scriptures</h1>
     <!-- Show all posts belonging to tag -->
     <ul>
         {% if scriptures %}
             {% for scripture in scriptures %}
-            <li><a class="scripture-title" href="/favorites/{{scripture.id}}">{{scripture.title}}</a></li>
+                <li><a class="scripture-title" href="/favorites/{{scripture.id}}">{{scripture.title}}</a></li>
             {% endfor %}
         {% else %}
             <li class="p-2">No scriptures yet.</li>
         {% endif %}
     </ul>
-    <div class="edit-delete pb-2">
+    <div class="d-flex pb-3">
         <a href="/tags/{{tag.id}}/edit" class="btn btn-primary">Edit</a>
         <form action="/tags/{{tag.id}}/delete" method="POST">
-            <button type="submit" class="btn btn-danger">Delete</button>
+            <button type="submit" class="btn btn-danger ml-2">Delete</button>
         </form> 
     </div> 
-    <a href="/tags" class="mx-n2">Back to tags</a>
+    <a href="/tags">Back to tags</a>
 </div>
 
 {% endblock %}

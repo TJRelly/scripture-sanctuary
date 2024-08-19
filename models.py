@@ -2,16 +2,22 @@
 
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from flask_bcrypt import Bcrypt
 
 from sqlalchemy import PrimaryKeyConstraint
 
 db = SQLAlchemy()
+bcrypt = Bcrypt()
+
 
 def connect_db(app):
     db.app = app
     db.init_app(app)
-    
-DEFAULT_IMG = "https://img.freepik.com/free-photo/river-surrounded-by-forests-cloudy-sky-thuringia-germany_181624-30863.jpg?t=st=1722951363~exp=1722954963~hmac=36e6cce6a32577e34e6c6bb28a6a9537e16265993e05de4266a4409cbf050987&w=996"
+
+
+DEFAULT_IMG = "/static/img/default_img.jpg"
+
+DEFAULT_PROFILE_IMG = "/static/img/default_profile_img.png"
 
 class User(db.Model):
     """Scripture Sanctuary user model"""
@@ -21,16 +27,45 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(500), unique=True, nullable=False)
     password = db.Column(db.String(500), nullable=False)
+
     first_name = db.Column(db.String(500))
     last_name = db.Column(db.String(500))
     email = db.Column(db.String(500), nullable=False)
+
     img_url = db.Column(db.String(500), default=DEFAULT_IMG)
+    profile_img_url = db.Column(db.String(500), default=DEFAULT_PROFILE_IMG)
 
     favorites = db.relationship("Favorite", backref="users", cascade="all, delete")
 
     def __repr__(self):
         user = self
-        return f"<User id={user.id} username={user.username} password={user.password} first_name={user.first_name} last_name={user.last_name} email={user.email}>"
+        return f"<User id={user.id} username={user.username} password={user.password} first_name={user.first_name} last_name={user.last_name} email={user.email} img_url={user.img_url} profile_img_url={user.profile_img_url}>"
+    
+    @classmethod
+    def register(cls, username, pwd, email, first_name, last_name):
+        """Register user w/hashed password & return user."""
+
+        hashed = bcrypt.generate_password_hash(pwd)
+        # turn bytestring into normal (unicode utf8) string
+        hashed_utf8 = hashed.decode("utf8")
+
+        # return instance of user w/username and hashed pwd
+        return cls(username=username, password=hashed_utf8, email=email, first_name=first_name, last_name=last_name)
+    
+    @classmethod
+    def authenticate(cls, username, pwd):
+        """Validate that user exists & password is correct.
+
+        Return user if valid; else return False.
+        """
+
+        u = User.query.filter_by(username=username).first()
+
+        if u and bcrypt.check_password_hash(u.password, pwd):
+            # return user instance
+            return u
+        else:
+            return False
 
 
 class Favorite(db.Model):
@@ -69,20 +104,21 @@ class Tag(db.Model):
 
 
 class FavoriteTag(db.Model):
-    """Blogly favorite and tag model""" 
-    
+    """Blogly favorite and tag model"""
+
     __tablename__ = "favorite_tags"
-    
-    favorite_id = db.Column(db.Integer, db.ForeignKey('favorites.id', ondelete="cascade"))
-    tag_id = db.Column(db.Integer, db.ForeignKey('tags.id', ondelete="cascade"))
-    
-    __table_args__ = (
-        PrimaryKeyConstraint('favorite_id', 'tag_id'),
+
+    favorite_id = db.Column(
+        db.Integer, db.ForeignKey("favorites.id", ondelete="cascade")
     )
-    
+    tag_id = db.Column(db.Integer, db.ForeignKey("tags.id", ondelete="cascade"))
+
+    __table_args__ = (PrimaryKeyConstraint("favorite_id", "tag_id"),)
+
     def __repr__(self):
         favorite_tag = self
         return f"<FavoriteTag favorite_id={favorite_tag.favorite_id} tag_id={favorite_tag.tag_id}>"
+
 
 # Find user favorites
 def get_user_favs():
