@@ -42,8 +42,8 @@ ul {
 }
 
 .navbar-collapse.show .nav-item .btn {
-   width: 5rem;
-  }
+    width: 5rem;
+}
 
 /* Users CSS */
 .user-list img {
@@ -94,7 +94,8 @@ ul {
     font-size: 2.5rem;
 }
 
-.scripture-title, .tag-name {
+.scripture-title,
+.tag-name {
     font-size: 1.25rem;
 }
 
