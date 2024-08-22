@@ -25,15 +25,19 @@ formate
     </section> 
 
     <section class="pb-4 px-3">
-        <div class="d-flex pb-2">
-            <a href="{{url_for('user_profile', user_id=favorite.users.id)}}" class="btn btn-primary mr-2">Back</a>
-            <form action="{{url_for('user_profile', user_id=favorite.users.id)}}" method="POST">
-                <button type="submit" class="btn btn-success">Add Tag</button>
-            </form>
+        <div class="pb-2">
+            <a href="{{url_for('user_profile', user_id=favorite.users.id)}}" class="btn btn-primary mr-2 rounded">My Profile</a>   
         </div> 
-        <form action="{{url_for('user_profile', user_id=favorite.users.id)}}" method="POST">
-            <button type="submit" class="btn btn-outline-danger mr-2">Delete</button>
-        </form>
+        {% if g.user.id == favorite.users.id %}
+        <div class="d-flex pb-2">
+            <form action="{{url_for('edit_favorite', favorite_id=favorite.id)}}">
+                <button type="submit" class="btn btn-success rounded">Add/Remove Tag</button>
+            </form>
+            <form action="{{url_for('delete_favorite', favorite_id=favorite.id)}}" method="POST">
+                <button type="submit" class="btn btn-outline-danger ml-2 rounded">Delete</button>
+            </form>
+        </div>
+        {% endif %}
         <div class="py-2">
             <a href="{{url_for('user_profile', user_id=favorite.users.id)}}">More from {{favorite.users.first_name}} {{favorite.users.last_name}}</a> <span class="p-2">Created on {{time}}</span>
         </div>

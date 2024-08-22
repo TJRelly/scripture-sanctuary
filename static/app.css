@@ -36,6 +36,11 @@ ul {
     font-size: 1rem;
 }
 
+.navbar a:hover {
+    font-size: 1.05rem;
+    transition: 0.25s;
+}
+
 .navbar a.logo {
     font-family: Georgia, "Times New Roman", Times, serif;
     font-size: 1.25rem;
@@ -43,6 +48,12 @@ ul {
 
 .navbar-collapse.show .nav-item .btn {
     width: 5rem;
+}
+
+.navbar .profile-img {
+    width: 3.5rem;
+    height: 3.5rem;
+    object-fit: cover;
 }
 
 /* Users CSS */
@@ -56,6 +67,7 @@ ul {
     width: 3.5rem;
     height: 3.5rem;
     object-fit: cover;
+    border-radius: 50%;
 }
 
 /* User Profile CSS */
@@ -141,6 +153,12 @@ ul {
     margin-top: 0;
 }
 
+/* Tag CSS */
+.tag-gap {
+    gap: 10rem;
+}
+
+
 /* Media query for smaller screens */
 @media (max-width: 600px) {
     .user-profile-header h2 {
@@ -158,82 +176,10 @@ ul {
     }
 }
 
-/* a {
-    padding-left: .5rem;
+@media (max-width: 990px) {
+    .navbar-nav.left {
+        display: flex;
+        flex-direction: row;
+        gap: 1rem;
+    }
 }
-
-input {
-    padding: .25rem .5rem;
-}
-
-.user-list a {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.img-wrapper {
-    position: relative;
-    width: 70px;
-    overflow: hidden;
-    border-radius: 50%;
-    aspect-ratio: 1/1;
-}
-
-.user-details {
-    padding: .5rem;
-}
-
-.user-details img {
-    width: 25rem;
-}
-
-form {
-  display: flex;
-  flex-direction: column;
-  width: 30rem;
-  padding: .5rem;
-  gap: 1rem;
-}
-
-textarea {
-    overflow: hidden;
-    padding: .5rem;
-}
-
-form button {
-    align-self: end;
-}
-
-.save-cancel, .add-cancel {
-    align-self: end;
-}
-
-.edit-delete {
-   width: 25rem;
-   display: flex;
-   gap: .5rem;
-}
-
-.edit-delete form {
-    width: fit-content;
-    padding: 0;
-}
-
-.bottom-btns {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-}
-
-.add-post {
-    margin: .5rem;
-}
-
-.post-tags {
-    list-style: none;
-    display: flex;
-    align-items: center;
-    gap: .25rem;
-    font-size: 1.2rem;
-} */

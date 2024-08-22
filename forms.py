@@ -44,36 +44,37 @@ class SearchForm(FlaskForm):
 
 
 class AddUserForm(FlaskForm):
-    username = StringField("Username", validators=[DataRequired()])
-    password = PasswordField("Password", validators=[DataRequired()])
-    first_name = StringField("First Name", validators=[Optional()])
-    last_name = StringField("Last Name", validators=[Optional()])
-    email = EmailField("Email", validators=[DataRequired()])
-    img_url = StringField("Image URL", validators=[Optional()])
-    profile_img_url = StringField("Profile Image URL", validators=[Optional()])
+    username = StringField("Username", validators=[DataRequired(), Length(max=20)])
+    password = PasswordField("Username", validators=[DataRequired(), Length(max=50)])
+    first_name = StringField("First Name", validators=[Optional(), Length(max=20)])
+    last_name = StringField("Last Name", validators=[Optional(), Length(max=20)])
+    email = EmailField("Email", validators=[DataRequired(), Length(max=50)])
+    img_url = StringField(
+        "Image URL",
+        validators=[Optional()],
+        render_kw={"placeholder": "copy image address"},
+    )
+    profile_img_url = StringField(
+        "Profile Image URL",
+        validators=[Optional()],
+        render_kw={"placeholder": "copy image address"},
+    )
 
 
 class EditUserForm(FlaskForm):
-    username = StringField("Username")
-    password = PasswordField("Password")
-    first_name = StringField("First Name")
-    last_name = StringField("Last Name")
-    email = EmailField("Email")
-    img_url = StringField("Image")
-    profile_img_url = StringField("Profile Image")
-    
-class RegisterForm(FlaskForm):
-    """Form to register users."""
-    
-    email = EmailField('Email', validators=[DataRequired(), Length(max=50)])
-    username = StringField('Username', validators=[DataRequired(), Length(max=20)])
-    password = PasswordField('Password', validators=[DataRequired()])
-    
-    first_name = StringField('First Name', validators=[DataRequired(), Length(max=50)])
-    last_name = StringField('Last Name', validators=[DataRequired(), Length(max=50)])  
-    
+    username = StringField("Username", validators=[Length(max=20)])
+    password = PasswordField("Password", validators=[Length(max=20)])
+    first_name = StringField("First Name", validators=[Length(max=20)])
+    last_name = StringField("Last Name", validators=[Length(max=20)])
+    email = EmailField("Email", validators=[Length(max=50)])
+    img_url = StringField("Image", render_kw={"placeholder": "copy image address"})
+    profile_img_url = StringField(
+        "Profile Image", render_kw={"placeholder": "copy image address"}
+    )
+
+
 class LoginForm(FlaskForm):
     """Form to register users."""
-    
-    username = StringField('Username', validators=[DataRequired(), Length(max=20)])
-    password = PasswordField('Password', validators=[DataRequired()])
+
+    username = StringField("Username", validators=[DataRequired(), Length(max=20)])
+    password = PasswordField("Password", validators=[DataRequired()])

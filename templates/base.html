@@ -31,11 +31,11 @@
                 <a class="nav-link active" aria-current="page" href="{{ url_for('show_users') }}">Users</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="{{ url_for('show_tags') }}">Popular Tags</a>
+                <a class="nav-link active" aria-current="page" href="{{ url_for('show_tags') }}">Tags</a>
               </li>
             </ul>
       
-            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0 left">
               {% if not g.user %}
                 <li class="nav-item">
                   <a class="nav-link active" aria-current="page" href="{{ url_for('signup') }}">Sign Up</a>
@@ -46,10 +46,10 @@
               {% else %}
                 <li  class="nav-item">
                   <a class="nav-link active" aria-current="page" href="/users/{{ g.user.id }}">
-                    <img src="{{ g.user.profile_img_url }}" alt="{{ g.user.username }}">
+                    <img src="{{ g.user.profile_img_url }}" alt="{{ g.user.username }}" class="rounded-circle profile-img">
                   </a> 
                 </li>
-                <li class="nav-item align-self-center">
+                <li class="nav-item logout mt-3">
                     <a class="nav-link active" aria-current="page" href="{{ url_for('logout') }}">Log Out</a>
                 </li>
               {% endif %}

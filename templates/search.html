@@ -56,21 +56,19 @@
     <!-- Display the scripture -->
      <div class="container bg-white">
         {% if scripture_text %}
-            <div class="d-flex align-items-center">
-                <h2 class="lead display-4 pt-2">
-                    {{formatted_scripture}} 
-                </h2>
-                <a 
-                    {% if g.user %}
-                    href="{{url_for('add_favorite', user_id=g.user.id)}}"
-                    {% else %}
-                    href="{{url_for('restricted')}}"
-                    {% endif %}
-                    class="btn btn-primary mt-2 ml-3"
-                >
-                    Add to Favorites
-                </a>
-            </div>
+        <div class="d-flex align-items-center">
+            <h2 class="lead display-4 pt-2">
+                {{ formatted_scripture }}
+            </h2>
+            
+            {% if g.user %}
+            <form action="{{ url_for('add_favorite') }}" method="POST" class="mt-2 ml-3">
+                <button type="submit" class="btn btn-primary">Add to Favorites</button>
+            </form>
+            {% else %}
+                <a href="{{ url_for('signup') }}" class="btn btn-primary mt-2 ml-3">Sign up to add Favorites</a>
+            {% endif %}
+        </div>
             <ul class="list-unstyled pb-4">
                 {% for verse in scripture_text %}
                     <li class="p-1 fs-5">

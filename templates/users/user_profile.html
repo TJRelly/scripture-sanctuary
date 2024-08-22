@@ -22,9 +22,9 @@
         <span class="fs-3 text-muted">@{{user.username}}</span>
         {% if g.user.id == user.id %}
         <div class="d-flex pt-3">
-            <a href="/users/{{user.id}}/edit" class="btn btn-primary mr-2">Edit</a>
+            <a href="/users/{{user.id}}/edit" class="btn btn-primary mr-2 rounded">Edit</a>
             <form action="/users/{{user.id}}/delete" method="POST">
-                <button type="submit" class="btn btn-danger">Delete</button>
+                <button type="submit" class="btn btn-danger rounded">Delete</button>
             </form> 
         </div> 
         {% endif %}
@@ -39,16 +39,14 @@
                     <li><a class="scripture-title" href="/favorites/{{scripture.id}}">{{scripture.title}}</a></li>
                     {% endfor %}
                 {% else %}
-                    <li class="p-2">No favorites yet.</li>
+                    <li class="py-2">No favorites yet.</li>
                 {% endif %}
             </ul>
             {% if g.user.id == user.id %}
             <div class="d-flex flex-column">
-                <a href="{{url_for('search')}}" class="btn btn-primary align-self-start">Add Favorite</a>
+                <a href="{{url_for('search')}}" class="btn btn-primary align-self-start rounded">Add Favorite</a>
             </div>
-            {% 
-                
-                endif %}
+            {% endif %}
         </section>
         
         <section class="user-details-tags col">
@@ -62,9 +60,11 @@
                     <li class="py-2">No tags yet.</li>
                 {% endif %}
             </ul>
+            {% if g.user.id == user.id %}
             <div class="d-flex flex-column">
-                <!-- <a href="{{url_for('search')}}" class="btn btn-primary align-self-start">Add Tag</a> -->
+                <a href="{{url_for('create_tag')}}" class="btn btn-primary align-self-start rounded">Create Tag</a>
             </div>
+            {% endif %}
         </section> 
     </section>
 </div>

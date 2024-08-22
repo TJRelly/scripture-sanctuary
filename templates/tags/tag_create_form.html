@@ -8,16 +8,17 @@ Create a tag
 
 <div class="container">
     <h1 class="pt-4 pb-3">Create a tag</h1>
-    <form action="/tags/new" method="POST">
+    <form action="{{url_for('create_tag')}}" method="POST">
         <div class="form-group">
             <input class="form-control" type="text" name="name" placeholder="Enter a new name for a tag" required>
         </div>
         <div class="pb-3">
-            <a href="/tags" class="btn btn-outline-success cancelBtn">Cancel</a>
-            <button type="submit" class="btn btn-success">Save</button>
+            <a href="{{url_for('create_tag')}}" class="btn btn-outline-success rounded">Cancel</a>
+            <button type="submit" class="btn btn-success rounded">Save</button>
         </div> 
     </form>
-    <a href="/tags">Back to tags</a>
+    <a href="{{url_for('user_profile', user_id=g.user.id)}}" class="btn btn-info rounded">My profile</a>
+    
 </div>
 
 {% endblock %}

@@ -22,38 +22,6 @@ def get_books():
     
     return books
 
-# def get_scripture(criteria):
-#     """Returns scripture w/verse or verses from form data"""
-#     try:
-#         translation, book, chapter, start_verse, end_verse = criteria
-        
-#         request_data = [
-#             {
-#                 "translation": translation,
-#                 "book": book,
-#                 "chapter": chapter,
-#                 "verses": list(range(int(start_verse), int(end_verse) + 1))
-#             }
-#         ]
-        
-#         # Send the POST request to the '/get-verses/' endpoint
-#         response = requests.post('https://bolls.life/get-verses/', headers={'Content-Type': 'application/json'}, json=request_data)
-
-#         if response.status_code == 200:
-#             print(response.json())
-#             return response.json()
-#         else:
-#             # Handle non-200 status code cases
-#             print(f"Error fetching scripture: {response.status_code} - {response.text}")
-#             return None
-    
-#     except Exception as e:
-#         # Handle any exceptions raised during the process
-#         print(f"An error occurred: {e}")
-#         return None
-
-# get chapter
-
 def get_scripture(criteria):
     """
     Returns scripture(s) based on chapter and selected verse or verses

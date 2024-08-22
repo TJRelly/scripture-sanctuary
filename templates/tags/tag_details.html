@@ -15,16 +15,18 @@
                 <li><a class="scripture-title" href="/favorites/{{scripture.id}}">{{scripture.title}}</a></li>
             {% endfor %}
         {% else %}
-            <li class="p-2">No scriptures yet.</li>
+            <li class="py-2">No scriptures yet.</li>
         {% endif %}
     </ul>
     <div class="d-flex pb-3">
-        <a href="/tags/{{tag.id}}/edit" class="btn btn-primary">Edit</a>
+        <!-- Can only edit or delete a tag you created -->
+        {% if g.user.id == tag.users.id %}
+        <a href="/tags/{{tag.id}}/edit" class="btn btn-primary rounded">Edit Tag</a>
         <form action="/tags/{{tag.id}}/delete" method="POST">
-            <button type="submit" class="btn btn-danger ml-2">Delete</button>
+            <button type="submit" class="btn btn-danger ml-2 rounded">Delete Tag</button>
         </form> 
+        {% endif %}
     </div> 
-    <a href="/tags">Back to tags</a>
 </div>
 
 {% endblock %}

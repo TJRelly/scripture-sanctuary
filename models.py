@@ -36,13 +36,14 @@ class User(db.Model):
     profile_img_url = db.Column(db.String(500), default=DEFAULT_PROFILE_IMG)
 
     favorites = db.relationship("Favorite", backref="users", cascade="all, delete")
+    tags = db.relationship("Tag", backref="users", cascade="all, delete")
 
     def __repr__(self):
         user = self
         return f"<User id={user.id} username={user.username} password={user.password} first_name={user.first_name} last_name={user.last_name} email={user.email} img_url={user.img_url} profile_img_url={user.profile_img_url}>"
     
     @classmethod
-    def register(cls, username, pwd, email, first_name, last_name):
+    def register(cls, username, pwd, email, first_name, last_name, img_url, profile_img_url):
         """Register user w/hashed password & return user."""
 
         hashed = bcrypt.generate_password_hash(pwd)
@@ -50,7 +51,7 @@ class User(db.Model):
         hashed_utf8 = hashed.decode("utf8")
 
         # return instance of user w/username and hashed pwd
-        return cls(username=username, password=hashed_utf8, email=email, first_name=first_name, last_name=last_name)
+        return cls(username=username, password=hashed_utf8, email=email, first_name=first_name, last_name=last_name, img_url=img_url, profile_img_url=profile_img_url)
     
     @classmethod
     def authenticate(cls, username, pwd):
@@ -96,11 +97,12 @@ class Tag(db.Model):
     __tablename__ = "tags"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id", ondelete="cascade"))
     name = db.Column(db.Text, unique=True)
 
     def __repr__(self):
         tag = self
-        return f"<Tag id={tag.id} name={tag.name}>"
+        return f"<Tag id={tag.id} name={tag.name} user_id={tag.user_id}>"
 
 
 class FavoriteTag(db.Model):

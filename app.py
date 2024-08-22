@@ -3,21 +3,21 @@ import re
 from flask import (
     Flask,
     g,
-    jsonify,
     redirect,
     render_template,
     flash,
-    url_for,
     request,
     session,
 )
+
 from flask_debugtoolbar import DebugToolbarExtension
 from psycopg2 import IntegrityError
+from sqlalchemy.exc import IntegrityError
 
 # created imports
-from api_requests import get_books, get_translations, get_scripture
-from forms import AddUserForm, EditUserForm, SearchForm, RegisterForm, LoginForm
-from models import db, connect_db, User, Favorite, Tag, FavoriteTag
+from api_requests import get_books, get_scripture
+from forms import AddUserForm, EditUserForm, SearchForm, LoginForm
+from models import db, connect_db, User, Favorite, Tag
 
 BOOKS = get_books()
 
@@ -35,6 +35,13 @@ app.config["SQLALCHEMY_ECHO"] = False
 connect_db(app)
 
 CURR_USER_KEY = "curr_user"
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    # You can render a custom 404 page template or return a message
+    return render_template("404.html"), 404
+
 
 ##############################################################################
 # User signup/login/logout
@@ -81,12 +88,17 @@ def signup():
     if form.validate_on_submit():
         print(form.errors)
         try:
-            user = User.signup(
+            user = User.register(
                 username=form.username.data,
-                password=form.password.data,
+                pwd=form.password.data,
+                first_name=form.first_name.data,
+                last_name=form.last_name.data,
                 email=form.email.data,
-                image_url=form.image_url.data or User.image_url.default.arg,
+                img_url=form.img_url.data or None,
+                profile_img_url=form.profile_img_url.data or None,
             )
+
+            db.session.add(user)
             db.session.commit()
 
         except IntegrityError:
@@ -94,6 +106,8 @@ def signup():
             return render_template("users/signup.html", form=form)
 
         do_login(user)
+
+        flash("You have registered!", "success")
 
         return redirect("/")
 
@@ -152,46 +166,6 @@ def show_users():
     return render_template("users/users.html", users=users)
 
 
-@app.route("/users/new", methods=["GET", "POST"])
-def add_user():
-    form = AddUserForm()
-
-    if form.validate_on_submit():
-        # Add the user to the database
-        new_user = User(
-            username=form.username.data,
-            password=form.password.data,
-            first_name=form.first_name.data,
-            last_name=form.last_name.data,
-            email=form.email.data,
-            img_url=form.img_url.data or None,
-            profile_img_url=form.profile_img_url.data or None,
-        )
-
-        try:
-            db.session.add(new_user)
-            db.session.commit()
-            flash(f"You've added {new_user.username}", "success")
-            return redirect(
-                url_for("get_users")
-            )  # Redirect to the list of users after successful addition
-
-        except Exception as e:  # Catch any exceptions
-            db.session.rollback()
-            dup = (
-                db.session.query(User).filter(User.username == new_user.username).all()
-            )
-
-            if dup:
-                flash("Username/Password already exists.", "danger")
-                return redirect(url_for("add_user"))
-            else:
-                flash(f"An error occurred: {str(e)}", "danger")
-                return redirect(url_for("add_user"))
-
-    return render_template("users/add_user.html", form=form)
-
-
 @app.route("/users/<int:user_id>", methods=["GET"])
 def user_profile(user_id):
     """
@@ -200,7 +174,7 @@ def user_profile(user_id):
     user = User.query.get_or_404((user_id))
     favorites = user.favorites
     scriptures = format_favorite_query(favorites)
-    tags = [tag for fav in user.favorites for tag in fav.tags]
+    tags = {tag for fav in user.favorites for tag in fav.tags}
 
     return render_template(
         "users/user_profile.html", user=user, scriptures=scriptures, tags=tags
@@ -212,6 +186,9 @@ def edit_user(user_id):
     """Show user details and handle editing"""
 
     user = User.query.get_or_404(user_id)
+
+    if user.id != g.user.id:
+        return redirect("/restricted")
 
     form = EditUserForm(obj=user)
 
@@ -256,6 +233,9 @@ def delete_user(user_id):
     """
     user = User.query.get_or_404(user_id)
 
+    if user.id != g.user.id:
+        return redirect("/restricted")
+
     db.session.delete(user)
     db.session.commit()
 
@@ -264,48 +244,15 @@ def delete_user(user_id):
     return redirect(f"/users")
 
 
-@app.route("/users/<user_id>/favorites/new")
-@app.route("/users/<user_id>/favorites/new", methods=["POST"])
-def add_favorite(user_id):
-    """Adds a favorite"""
-
-    user = User.query.get_or_404(user_id)
-
-    criteria = session.get("criteria")
-
-    if not criteria:
-        flash("Please enter valid search criteria", "danger")
-        return redirect("/")
-
-    # Create a new Favorite object using criteria
-    favorite = Favorite (
-        user_id=user_id,
-        book=criteria["book"],
-        chapter=criteria["chapter"],
-        start=criteria["start"],
-        end=criteria["end"],
-        translation=criteria["translation"],
-    )
-    
-    print(user.favorites)
-    db.session.add(favorite)
-    db.session.commit()
-    print(user.favorites)
-    
-    flash("Added successfully, View favorite in your profile", "success")
-    return redirect("/")
-
-
 ##############################################################################
-# General restricted routes:
+# General routes:
 
 
 @app.route("/restricted")
 def restricted():
     """Restricted"""
-    flash("You must sign up/log in to perform this action", "warning")
-    return redirect("/")
-
+    flash("You must sign up/log in to perform this action", "danger")
+    return redirect("/signup")
 
 ##############################################################################
 # General favorite routes:
@@ -313,7 +260,7 @@ def restricted():
 
 @app.route("/favorites/<int:favorite_id>")
 def show_favorite(favorite_id):
-    """Shows posts using id"""
+    """Shows favorites using id"""
 
     favorite = Favorite.query.get_or_404(favorite_id)
     time = favorite.created_at.strftime(f"%a %b %d %Y, %-I:%M %p")
@@ -340,12 +287,84 @@ def show_favorite(favorite_id):
         formatted_verses.append({"verse": verse["verse"], "text": formatted_text})
 
     return render_template(
-        "favorite.html",
+        "favorites/favorite.html",
         favorite=favorite,
         time=time,
         formatted_scripture=formatted_scripture,
         scripture_text=formatted_verses,
     )
+
+
+@app.route("/favorites/new", methods=["POST"])
+def add_favorite():
+    """Adds a favorite"""
+
+    criteria = session.get("criteria")
+
+    if not criteria:
+        flash("Please enter valid search criteria", "danger")
+        return redirect("/")
+
+    # Create a new Favorite object using criteria
+    favorite = Favorite(
+        user_id=g.user.id,
+        book=criteria["book"],
+        chapter=criteria["chapter"],
+        start=criteria["start"],
+        end=criteria["end"],
+        translation=criteria["translation"],
+    )
+
+    db.session.add(favorite)
+    db.session.commit()
+
+    flash("Added successfully, View favorite in your profile", "success")
+    return redirect(f"/favorites/{favorite.id}")
+
+
+@app.route("/favorites/<int:favorite_id>/delete", methods=["POST"])
+def delete_favorite(favorite_id):
+    """Adds a favorite"""
+
+    favorite = Favorite.query.get(favorite_id)
+
+    db.session.delete(favorite)
+    db.session.commit()
+
+    flash("The item has successfully been removed", "success")
+    return redirect(f"/users/{g.user.id}")
+
+
+@app.route("/favorites/<favorite_id>/edit", methods=["GET", "POST"])
+def edit_favorite(favorite_id):
+    """Shows form to edit favorites"""
+
+    favorite = Favorite.query.get_or_404(favorite_id)
+
+    if favorite.users.id != g.user.id:
+        return redirect("/restricted")
+
+    formatted_scripture = format_favorite_query([favorite])[0]["title"]
+
+    tags = Tag.query.all()
+
+    if request.method == "POST":
+        selected_tags = request.form.getlist("tags")
+        favorite.tags = []
+        for tag in selected_tags:
+            tag = Tag.query.filter_by(name=tag).first()
+            favorite.tags.append(tag)
+            db.session.commit()
+
+        return redirect(f"/favorites/{favorite_id}")
+
+    else:
+        return render_template(
+            "favorites/favorite_edit_form.html",
+            favorite=favorite,
+            tags=tags,
+            formatted_scripture=formatted_scripture,
+        )
 
 
 ##############################################################################
@@ -358,60 +377,68 @@ def show_tags():
 
     tags = Tag.query.all()
 
-    return render_template("tags.html", tags=tags)
+    return render_template("tags/tags.html", tags=tags)
 
 
 @app.route("/tags/<int:tag_id>")
 def show_tag_details(tag_id):
     """show tag detail page"""
 
-    tag = Tag.query.get(tag_id)
+    tag = Tag.query.get_or_404(tag_id)
     scriptures = format_favorite_query(tag.favorites)
 
-    return render_template("tag_details.html", tag=tag, scriptures=scriptures)
+    return render_template("tags/tag_details.html", tag=tag, scriptures=scriptures)
 
 
-@app.route("/tags/new")
-def add_tag_page():
-    """add tag to tags list"""
-
-    return render_template("tag_create_form.html")
-
-
-@app.route("/tags/new", methods=["POST"])
-def add_tag_database():
+@app.route("/tags/new", methods=["GET", "POST"])
+def create_tag():
     """adds tag to database"""
 
-    name = request.form["name"]
-    new_tag = Tag(name=name)
+    if request.method == "POST":
+        try:
+            name = request.form["name"]
+            new_tag = Tag(name=name, user_id=g.user.id)
 
-    db.session.add(new_tag)
-    db.session.commit()
+            db.session.add(new_tag)
+            db.session.commit()
 
-    return redirect("/tags")
+            flash("You've created a new tag!", "success")
+            return redirect("/tags/new")
+
+        except IntegrityError:
+            flash("Tag already exists. Please choose a different name.", "danger")
+
+            return redirect("/tags/new")
+
+    else:
+        if not g.user:
+            return redirect("/restricted")
+        return render_template("tags/tag_create_form.html")
 
 
-@app.route("/tags/<int:tag_id>/edit")
+@app.route("/tags/<int:tag_id>/edit", methods=["GET", "POST"])
 def edit_tag(tag_id):
     """shows edit tag page"""
 
-    tag = Tag.query.get(tag_id)
+    if request.method == "POST":
+        try:
+            new_tag = Tag.query.get_or_404(tag_id)
 
-    return render_template("tag_edit_form.html", tag=tag)
+            new_tag.name = request.form["name"]
 
+            db.session.add(new_tag)
+            db.session.commit()
 
-@app.route("/tags/<int:tag_id>/edit", methods=["POST"])
-def edit_tag_data(tag_id):
-    """shows edit tag page"""
+            return redirect("/tags")
+        except IntegrityError:
+            flash("Tag name already exists.", "danger")
+            return redirect(f"/tags/{tag_id}/edit")
+    else:
+        tag = Tag.query.get_or_404(tag_id)
+        if g.user.id != tag.users.id:
+            return redirect("/restricted")
 
-    new_tag = Tag.query.get(tag_id)
-
-    new_tag.name = request.form["name"]
-
-    db.session.add(new_tag)
-    db.session.commit()
-
-    return redirect("/tags")
+    return render_template("tags/tag_edit_form.html", tag=tag)
 
 
 @app.route("/tags/<int:tag_id>/delete", methods=["POST"])
@@ -424,6 +451,10 @@ def delete_tag(tag_id):
     db.session.commit()
 
     return redirect("/tags")
+
+
+##############################################################################
+# Search routes:
 
 
 @app.route("/search", methods=["GET", "POST"])
