@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Edit Tag
+Edit Topic
 {% endblock %}
 
 {% block content %}
@@ -10,15 +10,18 @@ Edit Tag
     <h1 class="pt-4 pb-3">Edit {{tag.name}}</h1>
     <form action="/tags/{{tag.id}}/edit" method="POST">
         <div class="form-group">
-            <input class="form-control" type="text" name="name" placeholder="Enter a new name for a tag" maxlength="50" required>
+            <input class="form-control" type="text" name="name" placeholder="Enter a new name for the topic" maxlength="50" required>
         </div>
         <div class="pb-3">
             <a href="{{url_for('edit_tag', tag_id=tag.id)}}" class="btn btn-outline-success rounded">Cancel</a>
             <button type="submit" class="btn btn-success rounded">Save</button>
         </div> 
     </form>
-    <a href="/tags">Popular tags</a>
-    <!-- Hidden input to store the previous page URL -->
+    <div class="d-flex flex-column gap-3">
+        <a href="/tags/{{tag.id}}">Back to {{tag.name}}</a>
+        <a href="/tags">All topics</a>
+    </div>
+    
 </div>
 
 {% endblock %}

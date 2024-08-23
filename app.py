@@ -541,7 +541,7 @@ def search():
         else:
             # Form is not valid
             print(f"Form errors: {form.errors}")
-            flash("Error on form")
+            flash("Internal Server Error", "danger")
             return redirect("/search")
 
     else:
