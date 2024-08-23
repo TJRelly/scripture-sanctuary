@@ -43,6 +43,10 @@ connect_db(app)
 
 CURR_USER_KEY = "curr_user"
 
+@app.after_request
+def add_security_headers(response):
+    response.headers['Content-Security-Policy'] = "script-src 'self' 'wasm-unsafe-eval' 'inline-speculation-rules'"
+    return response
 
 @app.errorhandler(404)
 def page_not_found(e):
