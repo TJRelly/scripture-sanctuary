@@ -9,7 +9,11 @@
 <div class="user-profile-header">
     <img src="{{user.img_url}}" alt="">
     <div class="text">
+        {% if g.user.id == user.id %}
         <h2 class="pt-4 display-1 text-white lead">Welcome {{user.first_name}}!</h2>
+        {% else %}
+        <h2 class="pt-4 text-white lead">@{{user.username}}</h2>
+        {% endif %}
     </div>
 </div>
 
