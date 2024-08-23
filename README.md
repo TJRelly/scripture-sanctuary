@@ -2,6 +2,8 @@
 
 Scripture Sanctuary is a Flask web application that allows users to search for scriptures, save them as favorites, and organize them by tags. It provides Bible search functionality, user authentication, profile management, and features to help users find and organize their favorite scriptures.
 
+Built using: https://bolls.life/api/ to search bible verses
+
 ## Features
 
 - User registration, login, and logout
@@ -12,6 +14,8 @@ Scripture Sanctuary is a Flask web application that allows users to search for s
 - Error handling for duplicate tags, invalid search queries, and user permissions
 
 ## Getting Started
+
+Visit the live site: [Scripture Sanctuary](https://scripture-sanctuary.onrender.com/)
 
 ### Prerequisites
 
