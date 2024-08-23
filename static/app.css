@@ -32,13 +32,13 @@ ul {
     width: 2.5rem;
 }
 
-.navbar a {
+.anchor-tag {
     font-size: 1rem;
+    transition: color 0.3s ease-in-out;
 }
 
-.navbar a:hover {
-    font-size: 1.05rem;
-    transition: 0.25s;
+.anchor-tag:hover {
+    color: rgb(176, 176, 219) !important
 }
 
 .navbar a.logo {
@@ -157,7 +157,6 @@ ul {
 .tag-gap {
     gap: 10rem;
 }
-
 
 /* Media query for smaller screens */
 @media (max-width: 600px) {

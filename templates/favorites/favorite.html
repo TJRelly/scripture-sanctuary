@@ -22,38 +22,46 @@ formate
                 {% endfor %}
             </ul>
         {% endif %}
-    </section> 
-
-    <section class="pb-4 px-3">
-        <div class="pb-2">
-            <a href="{{url_for('user_profile', user_id=favorite.users.id)}}" class="btn btn-primary mr-2 rounded">My Profile</a>   
-        </div> 
-        {% if g.user.id == favorite.users.id %}
-        <div class="d-flex pb-2">
-            <form action="{{url_for('edit_favorite', favorite_id=favorite.id)}}">
-                <button type="submit" class="btn btn-success rounded">Add/Remove Tag</button>
-            </form>
-            <form action="{{url_for('delete_favorite', favorite_id=favorite.id)}}" method="POST">
-                <button type="submit" class="btn btn-outline-danger ml-2 rounded">Delete</button>
-            </form>
-        </div>
-        {% endif %}
         <div class="py-2">
             <a href="{{url_for('user_profile', user_id=favorite.users.id)}}">More from {{favorite.users.first_name}} {{favorite.users.last_name}}</a> <span class="p-2">Created on {{time}}</span>
         </div>
-        
-         
-        <!-- Display tags for favorites -->
-        {% if favorite.tags %}
-            <h2 class="lead fs-1">Tags: </h2>
-            <ul class="favorite-tags d-flex">
-                {% for tag in favorite.tags %}
-                    <li>
-                        <a href="/tags/{{tag.id}}" class="btn btn-primary btn-sm py-0 px-1 text-capitalize font-italic font-weight-bold mr-2 fs-6">{{tag.name}}</a>
-                    </li>
+    </section> 
+
+    <section class="pb-4 px-3">
+         <h2 class="lead fs-1">Topics: </h2>
+         <!-- Display tags for favorites -->
+         {% if favorite.tags %}
+         <ul class="favorite-tags d-flex mb-4">
+             {% for tag in favorite.tags %}
+                 <li>
+                     <a href="/tags/{{tag.id}}" class="btn btn-primary btn-sm py-0 px-1 text-capitalize font-italic font-weight-bold mr-2 fs-6">{{tag.name}}</a>
+                 </li>
             {% endfor %}
-            </ul>
+         </ul>
+        {% else %}
+        <p>You have'nt added any tags yet.</p>
         {% endif %} 
+
+        {% if g.user.id == favorite.users.id %}
+        <div class="d-flex pb-2">
+            <form action="{{url_for('edit_favorite', favorite_id=favorite.id)}}">
+                <button type="submit" class="btn btn-success rounded">Add/Remove Topic</button>
+            </form>
+        </div>
+        {% endif %}
+        {% if g.user %} 
+        <div>
+            <a href="{{url_for('user_profile', user_id=g.user.id)}}" class="btn btn-primary mr-2 rounded">My Profile</a>   
+        </div>
+        {% endif %}
+        {% if g.user.id == favorite.users.id %}
+        <div class="my-4">
+            <p class="text-danger">This will delete the favorite:</p>
+            <form action="{{url_for('delete_favorite', favorite_id=favorite.id)}}" method="POST">
+                <button type="submit" class="btn btn-outline-danger rounded">Delete</button>
+            </form>
+        </div>
+        {% endif %}      
     </section>
 
 </div>

@@ -1,16 +1,16 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Tags
+Topics
 {% endblock %}
 
 {% block content %}
 
 <div class="container pt-4">
-    <h1 class="mb-4">Tags</h1>
+    <h1 class="mb-4">Topics</h1>
     <div class="d-flex tag-gap">
         <section>
-            <h2>All tags</h2>
+            <h2>All topics</h2>
             <ul class="py-2">
                 {% for tag in tags %}
                 <li><a class="fs-3" href="/tags/{{tag.id}}">{{tag.name}}</a></li>
@@ -20,16 +20,17 @@ Tags
         
         <section>
             {% if g.user %}
-            <h2>Your tags</h2>
+            <h2>Your topics</h2>
+            <p class="fs-6">Topics you've created</p>
             <ul class="py-2">
                 {% for tag in g.user.tags %}
                 <li><a class="fs-3" href="/tags/{{tag.id}}">{{tag.name}}</a></li>
                 {% else %}
-                <p>You haven't created any tags yet.</p>
+                <p>You haven't created any topics yet.</p>
                 {% endfor %}
             </ul>
             {% endif %}
-            <a href="{{url_for('create_tag')}}" class="btn btn-primary rounded mb-4 align-self-start">Create Tag</a>
+            <a href="{{url_for('create_tag')}}" class="btn btn-primary rounded mb-4 align-self-start">Create Topic</a>
         </section>
     </div>
     

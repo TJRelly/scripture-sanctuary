@@ -12,7 +12,24 @@
     <ul>
         {% if scriptures %}
             {% for scripture in scriptures %}
-                <li><a class="scripture-title" href="/favorites/{{scripture.id}}">{{scripture.title}}</a></li>
+                <li class="my-4">
+                    <div class="card border-secondary">
+                        <a href="/favorites/{{scripture.id}}">
+                            <h5 class="card-header">
+                                {{scripture.title}}
+                            </h5>
+                        </a>
+                        <div class="card-body">
+                          <p>
+                            <span class="card-text lead px-1 fs-6">
+                                {{scripture.verse}}
+                            </span>{{ scripture.text | safe }}
+                            {% if scripture.more %}</p>
+                          <a href="/favorites/{{scripture.id}}" class="card-link">...More</a>
+                          {% endif %}
+                        </div>
+                    </div>
+                </a></li>
             {% endfor %}
         {% else %}
             <li class="py-2">No scriptures yet.</li>
@@ -21,9 +38,9 @@
     <div class="d-flex pb-3">
         <!-- Can only edit or delete a tag you created -->
         {% if g.user.id == tag.users.id %}
-        <a href="/tags/{{tag.id}}/edit" class="btn btn-primary rounded">Edit Tag</a>
+        <a href="/tags/{{tag.id}}/edit" class="btn btn-primary rounded">Edit Topic</a>
         <form action="/tags/{{tag.id}}/delete" method="POST">
-            <button type="submit" class="btn btn-danger ml-2 rounded">Delete Tag</button>
+            <button type="submit" class="btn btn-outline-danger ml-2 rounded">Delete Topic</button>
         </form> 
         {% endif %}
     </div> 

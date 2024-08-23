@@ -120,11 +120,3 @@ class FavoriteTag(db.Model):
     def __repr__(self):
         favorite_tag = self
         return f"<FavoriteTag favorite_id={favorite_tag.favorite_id} tag_id={favorite_tag.tag_id}>"
-
-
-# Find user favorites
-def get_user_favs():
-    favorites = db.session.query(User, Favorite).join(Favorite).all()
-
-    for user, favorite in favorites:
-        print(user.first_name, user.last_name, favorite)

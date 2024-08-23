@@ -45,17 +45,17 @@ class SearchForm(FlaskForm):
 
 class AddUserForm(FlaskForm):
     username = StringField("Username", validators=[DataRequired(), Length(max=20)])
-    password = PasswordField("Username", validators=[DataRequired(), Length(max=50)])
+    password = PasswordField("Password", validators=[DataRequired(), Length(max=50)])
     first_name = StringField("First Name", validators=[Optional(), Length(max=20)])
     last_name = StringField("Last Name", validators=[Optional(), Length(max=20)])
     email = EmailField("Email", validators=[DataRequired(), Length(max=50)])
-    img_url = StringField(
-        "Image URL",
+    profile_img_url = StringField(
+        "Profile Image URL",
         validators=[Optional()],
         render_kw={"placeholder": "copy image address"},
     )
-    profile_img_url = StringField(
-        "Profile Image URL",
+    img_url = StringField(
+        "Banner Image URL",
         validators=[Optional()],
         render_kw={"placeholder": "copy image address"},
     )
@@ -67,9 +67,11 @@ class EditUserForm(FlaskForm):
     first_name = StringField("First Name", validators=[Length(max=20)])
     last_name = StringField("Last Name", validators=[Length(max=20)])
     email = EmailField("Email", validators=[Length(max=50)])
-    img_url = StringField("Image", render_kw={"placeholder": "copy image address"})
     profile_img_url = StringField(
         "Profile Image", render_kw={"placeholder": "copy image address"}
+    )
+    img_url = StringField(
+        "Banner Image", render_kw={"placeholder": "copy image address"}
     )
 
 

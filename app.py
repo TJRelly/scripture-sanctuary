@@ -1,5 +1,7 @@
 # pip imports
 import re
+import os
+
 from flask import (
     Flask,
     g,
@@ -13,6 +15,9 @@ from flask import (
 from flask_debugtoolbar import DebugToolbarExtension
 from psycopg2 import IntegrityError
 from sqlalchemy.exc import IntegrityError
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # created imports
 from api_requests import get_books, get_scripture
@@ -24,11 +29,13 @@ BOOKS = get_books()
 app = Flask(__name__)
 app.app_context().push()
 # for flask debugtoolbar
-app.config["SECRET_KEY"] = "oh-so-secret"
+app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "oh-so-secret")
 app.config["DEBUG_TB_INTERCEPT_REDIRECTS"] = False
 debug = DebugToolbarExtension(app)
 
-app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql:///scripture-sanctuary"
+app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
+    "SUPABASE_URI", "postgresql:///scripture-sanctuary"
+)
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SQLALCHEMY_ECHO"] = False
 
@@ -174,7 +181,9 @@ def user_profile(user_id):
     user = User.query.get_or_404((user_id))
     favorites = user.favorites
     scriptures = format_favorite_query(favorites)
-    tags = {tag for fav in user.favorites for tag in fav.tags}
+    tags = {tag for tag in user.tags} | {
+        tag for fav in user.favorites for tag in fav.tags
+    }
 
     return render_template(
         "users/user_profile.html", user=user, scriptures=scriptures, tags=tags
@@ -254,6 +263,7 @@ def restricted():
     flash("You must sign up/log in to perform this action", "danger")
     return redirect("/signup")
 
+
 ##############################################################################
 # General favorite routes:
 
@@ -267,13 +277,7 @@ def show_favorite(favorite_id):
 
     formatted_scripture = format_favorite_query([favorite])[0]
 
-    criteria = [
-        favorite.translation,
-        favorite.book,
-        favorite.chapter,
-        favorite.start,
-        favorite.end,
-    ]
+    criteria = get_favorite_criteria(favorite)
 
     scripture_text = get_scripture(criteria)
 
@@ -349,13 +353,14 @@ def edit_favorite(favorite_id):
     tags = Tag.query.all()
 
     if request.method == "POST":
-        selected_tags = request.form.getlist("tags")
         favorite.tags = []
+        selected_tags = request.form.getlist("tags")
+
         for tag in selected_tags:
             tag = Tag.query.filter_by(name=tag).first()
             favorite.tags.append(tag)
-            db.session.commit()
 
+        db.session.commit()
         return redirect(f"/favorites/{favorite_id}")
 
     else:
@@ -386,6 +391,23 @@ def show_tag_details(tag_id):
 
     tag = Tag.query.get_or_404(tag_id)
     scriptures = format_favorite_query(tag.favorites)
+
+    scriptures = []
+    for favorite in tag.favorites:
+        criteria = get_favorite_criteria(favorite)
+        text = get_scripture(criteria)[0]
+        scripture_text = remove_strongs_tags(text["text"])
+        scripture_title_id = format_favorite_query([favorite])[0]
+        more = len(scripture_text) > 1
+        scriptures.append(
+            {
+                "text": scripture_text,
+                "title": scripture_title_id["title"],
+                "id": scripture_title_id["id"],
+                "more": more,
+                "verse": text["verse"],
+            }
+        )
 
     return render_template("tags/tag_details.html", tag=tag, scriptures=scriptures)
 
@@ -478,6 +500,7 @@ def search():
 
             criteria = [translation, book, chapter, start_verse, end_verse]
 
+            # Add criteria to session for other routes
             session["criteria"] = {
                 "book": book,
                 "chapter": chapter,
@@ -560,7 +583,7 @@ def remove_strongs_tags(text):
 
 def format_favorite_query(query):
     """
-    Formats database query into human readable scripture
+    Formats database query into human readable scripture title
     """
     scriptures = []
 
@@ -578,3 +601,15 @@ def format_favorite_query(query):
         scriptures.append(formatted_scripture)
 
     return scriptures
+
+
+def get_favorite_criteria(favorite):
+    """Converts Favorite object into criteria"""
+    criteria = [
+        favorite.translation,
+        favorite.book,
+        favorite.chapter,
+        favorite.start,
+        favorite.end,
+    ]
+    return criteria

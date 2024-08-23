@@ -50,7 +50,7 @@
         </section>
         
         <section class="user-details-tags col">
-            <h2 class="tags pt-4 lead">Tags</h2>
+            <h2 class="tags pt-4 lead">Topics</h2>
             <ul>
                 {% if tags %}
                     {% for tag in tags %}
@@ -62,7 +62,7 @@
             </ul>
             {% if g.user.id == user.id %}
             <div class="d-flex flex-column">
-                <a href="{{url_for('create_tag')}}" class="btn btn-primary align-self-start rounded">Create Tag</a>
+                <a href="{{url_for('create_tag')}}" class="btn btn-primary align-self-start rounded">Create Topic</a>
             </div>
             {% endif %}
         </section> 
