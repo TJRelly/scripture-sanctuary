@@ -1,15 +1,15 @@
 # Scripture Sanctuary
 
-Scripture Sanctuary is a Flask web application that allows users to search for scriptures, save them as favorites, and organize them by tags. It provides Bible search functionality, user authentication, profile management, and features to help users find and organize their favorite scriptures.
+Scripture Sanctuary is a Flask web application that allows users to search for scriptures, save them as favorites, and organize them by tags/topics. It provides Bible search functionality, user authentication, profile management, and features to help users find and organize their favorite scriptures.
 
 ## Features
 
 - User registration, login, and logout
 - Search for Bible scriptures by book, chapter, verse, and translation
-- Save favorite scriptures and organize them with custom tags
+- Save favorite scriptures and organize them with custom tags/topics
 - View, edit, and delete user profiles
-- Manage saved scriptures and tags
-- Error handling for duplicate tags, invalid search queries, and user permissions
+- Manage saved scriptures and tags/topics
+- Error handling for duplicate tags/topics, invalid search queries, and user permissions
 
 ## Getting Started
 
@@ -86,7 +86,7 @@ Your application should now be running on `http://localhost:5000`.
 
 1. **User Authentication**
    - Sign up for a new account or log in using an existing account.
-   - You can access your profile page to view your favorite scriptures and manage your tags.
+   - You can access your profile page to view your favorite scriptures and manage your tags/topics.
 
 2. **Search Scriptures**
    - Navigate to the search page to search for Bible verses by book, chapter, verse, and translation.
@@ -94,11 +94,11 @@ Your application should now be running on `http://localhost:5000`.
 
 3. **Manage Favorites**
    - View your saved scriptures on your profile page.
-   - You can edit or delete your saved scriptures and organize them with tags.
+   - You can edit or delete your saved scriptures and organize them with tags/topics.
 
-4. **Manage Tags**
-   - Add new tags to organize your saved scriptures.
-   - Edit or delete tags as needed from the tags management page.
+4. **Manage tags/topics**
+   - Add new tags/topics to organize your saved scriptures.
+   - Edit or delete tags/topics as needed from the tags/topics management page.
 
 ## Contributing
 
