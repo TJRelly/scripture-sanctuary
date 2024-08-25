@@ -1,4 +1,4 @@
-# Scripture Sanctuary
+# [Scripture Sanctuary](https://scripture-sanctuary.onrender.com/)
 
 Scripture Sanctuary is a Flask web application that allows users to search for scriptures, save them as favorites, and organize them by tags/topics. It provides Bible search functionality, user authentication, profile management, and features to help users find and organize their favorite scriptures.
 
