@@ -1,13 +1,14 @@
 import requests
 
 MOST_READ = ["NIV", "KJV", "NKJV", "ESV", "NLT", "NASB", "MSG"]
+BASE_URL = "https://bolls.life"
 
 def get_translations():
     """
     Returns a list of popular bible translations: 
     ["abbrevation - full name"]
     """
-    english_translations = requests.get("https://bolls.life/static/bolls/app/views/languages.json").json()[4]
+    english_translations = requests.get(f"{BASE_URL}/static/bolls/app/views/languages.json").json()[4]
     
     popular_translations = [{'short_name' : t['short_name'], 'full_name':t['full_name']} for t in english_translations['translations'] if t['short_name'] in MOST_READ]
     
@@ -18,7 +19,7 @@ def get_books():
     Return a list of 66 bible books: 
     {"bookid", "name", "chronorder", "chapters"}
     """
-    books = requests.get("https://bolls.life/static/bolls/app/views/translations_books.json").json()['YLT']
+    books = requests.get(f"{BASE_URL}/static/bolls/app/views/translations_books.json").json()['YLT']
     
     return books
 
@@ -31,7 +32,7 @@ def get_scripture(criteria):
         translation, book, chapter, start_verse, end_verse = criteria
         
         # Send the Get requests to'/get-text/' depending on input
-        request_chapter = f'https://bolls.life/get-chapter/{translation}/{book}/{chapter}'
+        request_chapter = f'{BASE_URL}/get-chapter/{translation}/{book}/{chapter}'
         
         # Get the whole chapter
         

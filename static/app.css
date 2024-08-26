@@ -54,6 +54,8 @@ ul {
     width: 3.5rem;
     height: 3.5rem;
     object-fit: cover;
+    border-radius: 50%;
+    background-color: lavender; 
 }
 
 /* Users CSS */
@@ -68,6 +70,7 @@ ul {
     height: 3.5rem;
     object-fit: cover;
     border-radius: 50%;
+    background-color: lavender;
 }
 
 /* User Profile CSS */
@@ -79,11 +82,11 @@ ul {
 
 .user-profile-header img {
     width: 100%;
-    height: auto;
-    max-height: 20rem;
+    height: 15rem;
+    max-height: 15rem;
     display: block;
     object-fit: cover;
-    background-color: pink;
+    background-color: lavender;
 }
 
 .user-profile-header .text {

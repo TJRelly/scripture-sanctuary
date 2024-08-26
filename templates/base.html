@@ -50,7 +50,9 @@
               {% else %}
                 <li  class="nav-item">
                   <a class="nav-link active" aria-current="page" href="/users/{{ g.user.id }}">
-                    <img src="{{ g.user.profile_img_url }}" alt="{{ g.user.username }}" class="rounded-circle profile-img">
+                    <div>
+                      <img src="{{ g.user.profile_img_url }}" alt="" class="rounded-circle profile-img">
+                    </div>
                   </a> 
                 </li>
                 <li class="nav-item logout mt-3">
@@ -67,7 +69,7 @@
     {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
         {% for category, message in messages %}
-            <div class="m-0 alert alert-{{ category }} alert-dismissible fade show text-center" role="alert">{{ message }}</div>
+            <div class="m-0 alert alert-{{ category }} alert-dismissible fade show text-center flash-message" role="alert">{{ message }}</div>
         {% endfor %}
     {% endif %}
     {% endwith %}

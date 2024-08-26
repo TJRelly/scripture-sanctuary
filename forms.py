@@ -45,7 +45,7 @@ class SearchForm(FlaskForm):
 
 class AddUserForm(FlaskForm):
     username = StringField("Username", validators=[DataRequired(), Length(max=20)])
-    password = PasswordField("Password", validators=[DataRequired(), Length(max=50)])
+    password = PasswordField("Password", validators=[DataRequired(), Length(max=20)])
     first_name = StringField("First Name", validators=[Optional(), Length(max=20)])
     last_name = StringField("Last Name", validators=[Optional(), Length(max=20)])
     email = EmailField("Email", validators=[DataRequired(), Length(max=50)])
@@ -79,4 +79,4 @@ class LoginForm(FlaskForm):
     """Form to register users."""
 
     username = StringField("Username", validators=[DataRequired(), Length(max=20)])
-    password = PasswordField("Password", validators=[DataRequired()])
+    password = PasswordField("Password", validators=[DataRequired(), Length(max=20)])

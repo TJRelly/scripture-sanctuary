@@ -9,7 +9,7 @@ Log In
     <h1 class="display-1 mx-n1">
         Log In
     </h1>
-    <p>Don't have an accout? <a href="/register">Register Here.</a></p>
+    <p>Don't have an accout? <a href="{{url_for('signup')}}">Register Here.</a></p>
     <form id="register-form" method="POST">
         {{ form.hidden_tag() }} <!--add type=hidden form fields -->
       
