@@ -1,4 +1,3 @@
-import os
 from unittest import TestCase
 from app import app, CURR_USER_KEY
 from models import db, Favorite, User, Tag
@@ -84,8 +83,8 @@ class FavoriteViewTestCase(TestCase):
     def test_delete_favorite_logged_out(self):
         """Test that logged-out users cannot delete a favorite."""
         with self.client as c:
-            resp = c.post(f"/favorites/{self.test_favorite.id}/delete", follow_redirects=True)
-            self.assertEqual(resp.status_code, 404)
+            resp = c.post(f"/favorites/{self.test_favorite.id}/delete")
+            self.assertEqual(resp.status_code, 302)
 
     def test_edit_favorite(self):
         """Test if user can edit their favorite."""

@@ -19,7 +19,6 @@ class TagService:
         for tag in selected:
             tag = Tag.query.filter_by(name=tag).first()
             fav.tags.append(tag)
-        print(fav.tags)
         db.session.commit()
 
     def save_new_tag(self, user, title):

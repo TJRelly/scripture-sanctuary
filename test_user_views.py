@@ -1,6 +1,5 @@
 """View tests for User routes in Scripture Sanctuary."""
 
-import os
 from unittest import TestCase
 from models import db, User
 from app import app, CURR_USER_KEY
@@ -121,8 +120,10 @@ class UserViewTestCase(TestCase):
                 },
                 follow_redirects=True,
             )
-            new_user = User.query.get(self.testuser.id)
-            print(new_user)
+            
+            user = User.query.get(self.testuser.id)
+            self.assertNotEqual(user.username, "hackeduser")
+            self.assertNotEqual(user.first_name, "Hacked")
             self.assertEqual(resp.status_code, 200)
 
     def test_delete_user(self):
@@ -142,8 +143,8 @@ class UserViewTestCase(TestCase):
     def test_delete_user_logged_out(self):
         """Test if logged out users are prohibited from deleting accounts."""
         with self.client as c:
-            resp = c.post(f"/users/{self.testuser.id}/delete", follow_redirects=True)
-            self.assertEqual(resp.status_code, 200)
+            resp = c.post(f"/users/{self.testuser.id}/delete")
+            self.assertEqual(resp.status_code, 302)
 
             # Verify user is not deleted
             not_deleted_user = User.query.get(self.testuser.id)

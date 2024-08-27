@@ -45,7 +45,6 @@ def get_scripture(criteria):
                 verses = [chapter[verse] for verse in range(start_verse-1, end_verse)]    
                 return verses
             elif start_verse:
-                print(chapter[start_verse-1])
                 return [chapter[start_verse-1]]
             elif end_verse:
                 verses = [chapter[verse] for verse in range(0, end_verse)]    
